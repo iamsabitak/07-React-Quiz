@@ -1,5 +1,7 @@
 import { useReducer } from "react";
 
+const initialState = { count: 0, step: 1 };
+
 function reducer(state, action) {
   console.log(state, action);
 
@@ -13,7 +15,7 @@ function reducer(state, action) {
     case "setStep":
       return { ...state, step: action.payload };
     case "reset":
-      return { count: 0, step: 1 };
+      return initialState;
     default:
       throw new Error("Unknown action");
   }
@@ -22,7 +24,6 @@ function reducer(state, action) {
   // if (action.type === "setCount") return action.payload;
 }
 function DateCounter() {
-  const initialState = { count: 0, step: 1 };
   // const [count, setCount] = useState(0);
   const [state, dispatch] = useReducer(reducer, initialState);
   // const [step, setStep] = useState(1);
