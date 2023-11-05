@@ -25,9 +25,14 @@ function reducer(state, action) {
         status: "active",
       };
     case "newAnswer":
+      const question = state.questions.at(state.index);
       return {
         ...state,
         answer: action.payload,
+        points:
+          action.payload === question.correctOption
+            ? state.points + 1
+            : state.points,
       };
     default:
       throw new Error("Action Error");
@@ -40,6 +45,7 @@ const initialState = {
   status: "loading",
   index: 0,
   answer: null,
+  points: 0,
 };
 function App() {
   const [{ questions, status, index, answer }, dispatch] = useReducer(
@@ -66,9 +72,9 @@ function App() {
         )}
         {status === "active" && (
           <Question
-          question={questions[index]}
-          dispatch={dispatch}
-          answer={answer}
+            question={questions[index]}
+            dispatch={dispatch}
+            answer={answer}
           />
         )}
       </Main>
