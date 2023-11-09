@@ -19,8 +19,9 @@ const initialState = {
   answer: null,
   points: 0,
   highscore: 0,
+  secondRemaining: null,
 };
-
+const SECS_PER_QUESTION = 30;
 function reducer(state, action) {
   switch (action.type) {
     case "dataReceived":
@@ -38,6 +39,7 @@ function reducer(state, action) {
       return {
         ...state,
         status: "active",
+        secondRemaining: state.questions.length * SECS_PER_QUESTION,
       };
     case "newAnswer":
       const question = state.questions.at(state.index);
@@ -76,13 +78,21 @@ function reducer(state, action) {
     //   answer: null,
     //   status: "ready",
     // };
+    case "tick":
+      return {
+        ...state,
+        secondRemaining: state.secondRemaining - 1,
+        status: state.secondRemaining === 0 ? "finished" : state.status,
+      };
     default:
       throw new Error("Action Error");
   }
 }
 function App() {
-  const [{ questions, status, index, answer, points, highscore }, dispatch] =
-    useReducer(reducer, initialState);
+  const [
+    { questions, status, index, answer, points, highscore, secondRemaining },
+    dispatch,
+  ] = useReducer(reducer, initialState);
   const numQuestions = questions.length;
   const maxPossiblePoints = questions.reduce(
     (prev, curr) => prev + curr.points,
@@ -121,13 +131,13 @@ function App() {
             />
 
             <Footer>
-              <Timer/>
-            <NextButton
-              dispatch={dispatch}
-              answer={answer}
-              index={index}
-              numQuestions={numQuestions}
-            />
+              <Timer dispatch={dispatch} secondRemaining={secondRemaining} />
+              <NextButton
+                dispatch={dispatch}
+                answer={answer}
+                index={index}
+                numQuestions={numQuestions}
+              />
             </Footer>
           </>
         )}
