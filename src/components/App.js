@@ -42,7 +42,7 @@ function reducer(state, action) {
         secondRemaining: state.questions.length * SECS_PER_QUESTION,
       };
     case "newAnswer":
-      const question = state.questions.at(state.index)
+      const question = state.questions.at(state.index);
       return {
         ...state,
         answer: action.payload,
